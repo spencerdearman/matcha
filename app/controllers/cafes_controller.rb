@@ -1,4 +1,6 @@
 class CafesController < ApplicationController
+  before_action :authenticate_user!
+  
   def index
     matching_cafes = Cafe.all
 

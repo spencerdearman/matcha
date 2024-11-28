@@ -1,4 +1,6 @@
 class FollowsController < ApplicationController
+  before_action :authenticate_user!
+  
   def index
     matching_follows = Follow.all
 

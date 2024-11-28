@@ -1,4 +1,16 @@
 Rails.application.routes.draw do
+  get 'landing/index'
+
+  # Devise routes for user authentication
+  devise_for :users
+
+  # Define other routes as needed
+  root to: "home#index"  # Replace with your desired root path
+
+  # Landing page after sign-in
+  authenticated :user do
+    root 'landing#index', as: :authenticated_root
+  end
 
   # Routes for the Like resource:
 
@@ -94,11 +106,5 @@ Rails.application.routes.draw do
   get("/delete_post/:path_id", { :controller => "posts", :action => "destroy" })
 
   #------------------------------
-
-  devise_for :users
-
-  # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
-
-  # get "/your_first_screen" => "pages#first"
   
 end
