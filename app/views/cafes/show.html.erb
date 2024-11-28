@@ -1,0 +1,146 @@
+<div>
+  <div>
+    <h1>
+      Cafe #<%= @the_cafe.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/cafes">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_cafe/<%= @the_cafe.id %>">
+          Delete cafe
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        User
+      </dt>
+      <dd>
+        <%= @the_cafe.user_id %>
+      </dd>
+
+      <dt>
+        Name
+      </dt>
+      <dd>
+        <%= @the_cafe.name %>
+      </dd>
+
+      <dt>
+        Address
+      </dt>
+      <dd>
+        <%= @the_cafe.address %>
+      </dd>
+
+      <dt>
+        Lat
+      </dt>
+      <dd>
+        <%= @the_cafe.lat %>
+      </dd>
+
+      <dt>
+        Lng
+      </dt>
+      <dd>
+        <%= @the_cafe.lng %>
+      </dd>
+
+      <dt>
+        Description
+      </dt>
+      <dd>
+        <%= @the_cafe.description %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_cafe.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_cafe.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit cafe
+    </h2>
+
+    <form action="/modify_cafe/<%= @the_cafe.id %>"  method="post" >
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_cafe.user_id %>">
+      </div>
+
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name" value="<%= @the_cafe.name %>">
+      </div>
+
+      <div>
+        <label for="address_box">
+          Address
+        </label>
+
+        <input type="text" id="address_box" name="query_address" value="<%= @the_cafe.address %>">
+      </div>
+
+      <div>
+        <label for="lat_box">
+          Lat
+        </label>
+
+        <input type="text" id="lat_box" name="query_lat" value="<%= @the_cafe.lat %>">
+      </div>
+
+      <div>
+        <label for="lng_box">
+          Lng
+        </label>
+
+        <input type="text" id="lng_box" name="query_lng" value="<%= @the_cafe.lng %>">
+      </div>
+
+      <div>
+        <label for="description_box">
+          Description
+        </label>
+
+        <textarea id="description_box" name="query_description"><%= @the_cafe.description %></textarea>
+      </div>
+
+      <button>
+        Update cafe
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

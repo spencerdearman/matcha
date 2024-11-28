@@ -1,0 +1,102 @@
+<div>
+  <div>
+    <h1>
+      List of all follows
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new follow
+    </h2>
+
+    <form action="/insert_follow" method="post">
+      <div>
+        <label for="follower_id_box">
+          Follower
+        </label>
+
+        <input type="text" id="follower_id_box" name="query_follower_id">
+      </div>
+
+      <div>
+        <label for="followed_id_box">
+          Followed
+        </label>
+
+        <input type="text" id="followed_id_box" name="query_followed_id">
+      </div>
+
+      <button>
+        Create follow
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table border="1">
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Follower
+        </th>
+
+        <th>
+          Followed
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_follows.each do |a_follow| %>
+      <tr>
+        <td>
+          <%= a_follow.id %>
+        </td>
+
+        <td>
+          <%= a_follow.follower_id %>
+        </td>
+
+        <td>
+          <%= a_follow.followed_id %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_follow.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_follow.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/follows/<%= a_follow.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

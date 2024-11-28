@@ -1,0 +1,166 @@
+<div>
+  <div>
+    <h1>
+      List of all cafes
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new cafe
+    </h2>
+
+    <form action="/insert_cafe" method="post">
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id">
+      </div>
+
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name">
+      </div>
+
+      <div>
+        <label for="address_box">
+          Address
+        </label>
+
+        <input type="text" id="address_box" name="query_address">
+      </div>
+
+      <div>
+        <label for="lat_box">
+          Lat
+        </label>
+
+        <input type="text" id="lat_box" name="query_lat">
+      </div>
+
+      <div>
+        <label for="lng_box">
+          Lng
+        </label>
+
+        <input type="text" id="lng_box" name="query_lng">
+      </div>
+
+      <div>
+        <label for="description_box">
+          Description
+        </label>
+
+        <textarea id="description_box" name="query_description" rows="3"></textarea>
+      </div>
+
+      <button>
+        Create cafe
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table border="1">
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          User
+        </th>
+
+        <th>
+          Name
+        </th>
+
+        <th>
+          Address
+        </th>
+
+        <th>
+          Lat
+        </th>
+
+        <th>
+          Lng
+        </th>
+
+        <th>
+          Description
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_cafes.each do |a_cafe| %>
+      <tr>
+        <td>
+          <%= a_cafe.id %>
+        </td>
+
+        <td>
+          <%= a_cafe.user_id %>
+        </td>
+
+        <td>
+          <%= a_cafe.name %>
+        </td>
+
+        <td>
+          <%= a_cafe.address %>
+        </td>
+
+        <td>
+          <%= a_cafe.lat %>
+        </td>
+
+        <td>
+          <%= a_cafe.lng %>
+        </td>
+
+        <td>
+          <%= a_cafe.description %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_cafe.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_cafe.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/cafes/<%= a_cafe.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>
