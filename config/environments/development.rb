@@ -3,13 +3,16 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Allow server to be hosted on any URL
   config.hosts.clear
+
   # Allow better_errors to work in online IDE
   config.web_console.allowed_ips = "0.0.0.0/0.0.0.0"
   BetterErrors::Middleware.allow_ip! "0.0.0.0/0.0.0.0"
+
   # Auto-connect to database when rails console opens
   console do
     ActiveRecord::Base.connection
   end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time
@@ -44,6 +47,11 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+
+  # Configure Active Storage URL options
+  config.after_initialize do
+    ActiveStorage::Current.url_options = { host: 'localhost', port: 3000 }
+  end
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

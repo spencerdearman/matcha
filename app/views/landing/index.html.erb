@@ -51,7 +51,7 @@
               <span><%= post.likes.count %> <%= 'Like'.pluralize(post.likes.count) %></span>
 
               <!-- Comment Icon -->
-              <a href="<%= post_path(post) %>" class="icon-comment">
+              <a href="#" class="icon-comment" data-post-id="<%= post.id %>">
                 <%= image_tag 'message.png', alt: 'Comments', class: 'icon' %>
               </a>
               <span><%= post.comments.count %> <%= 'Comment'.pluralize(post.comments.count) %></span>
@@ -64,6 +64,14 @@
       <% else %>
         <p>No posts available.</p>
       <% end %>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="postModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="modal-content"></div>
     </div>
   </div>
 
@@ -172,6 +180,77 @@
       font-size: 14px;
       text-align: left;
     }
+
+    /* Modal Styles */
+    .modal {
+      display: none; /* Initially hidden */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content {
+      position: relative;
+      margin: auto;
+      padding: 20px;
+      background: #fff;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('postModal');
+      const modalContent = document.getElementById('modal-content');
+      const closeBtn = document.querySelector('.close');
+
+      document.querySelectorAll('.icon-comment').forEach((button) => {
+        button.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const postId = e.target.closest('a').dataset.postId;
+
+          // Fetch the modal content for the post
+          const response = await fetch(`/posts/${postId}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          });
+          const data = await response.text();
+
+          // Insert the fetched content into the modal
+          modalContent.innerHTML = data;
+
+          // Display the modal
+          modal.style.display = 'block';
+        });
+      });
+
+      // Close the modal when the close button is clicked
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+      // Close the modal when clicking outside the modal content
+      window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,51 +1,57 @@
 <h1>Post Details</h1>
 
-<div class="post-details">
-  <!-- Post Image -->
-  <% if @the_post.image.attached? %>
-    <%= image_tag(@the_post.image.url, alt: 'Post Image', class: 'post-image') %>
-  <% end %>
-
-  <!-- Post Caption -->
-  <p class="post-caption"><%= @the_post.caption %></p>
-
-  <!-- Post Actions -->
-  <div class="post-actions">
-    <%= link_to 'Edit Post', edit_post_path(@the_post), class: 'btn-edit' %>
-    <%= link_to 'Delete Post', post_path(@the_post), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn-delete' %>
-    <%= link_to 'Back to Posts', posts_path, class: 'btn-back' %>
-  </div>
-
-  <!-- Likes Section -->
-  <div class="post-likes">
-    <% if @the_post.liked_by?(current_user) %>
-      <%= button_to 'Unlike', post_like_path(@the_post, @the_post.likes.find_by(user: current_user)), method: :delete, class: 'btn-unlike' %>
-    <% else %>
-      <%= button_to 'Like', post_likes_path(@the_post), method: :post, class: 'btn-like' %>
-    <% end %>
-    <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
-  </div>
-
-  <!-- Comments Section -->
-  <div class="post-comments">
-    <h3>Comments (<%= @the_post.comments.count %>)</h3>
-    <ul class="comments-list">
-      <% @the_post.comments.each do |comment| %>
-        <li>
-          <strong><%= comment.user.username %>:</strong> <%= comment.content %>
-          <% if comment.user == current_user %>
-            <%= link_to 'Delete', post_comment_path(@the_post, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn-delete-comment' %>
-          <% end %>
-        </li>
+<div class="modal" id="post-modal">
+  <div class="modal-content">
+    <!-- Static image section -->
+    <div class="post-image-section">
+      <% if @the_post.image.attached? %>
+        <%= image_tag(@the_post.image, alt: 'Post Image', class: 'post-modal-image') %>
       <% end %>
-    </ul>
+    </div>
 
-    <!-- Add Comment Form -->
-    <h4>Add a Comment</h4>
-    <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
-      <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
-      <%= form.submit 'Comment', class: 'btn-comment' %>
-    <% end %>
+    <!-- Comments sidebar -->
+    <div class="post-comments-section">
+      <span class="close" id="close-modal">&times;</span>
+
+      <!-- Post Caption -->
+      <h3 class="post-caption">
+        <strong><%= @the_post.user.username.capitalize %>:</strong>
+        <%= @the_post.caption %>
+      </h3>
+
+      <!-- Likes Section -->
+      <div class="post-likes">
+        <% if @the_post.liked_by?(current_user) %>
+          <%= button_to 'Unlike', post_like_path(@the_post, @the_post.likes.find_by(user: current_user)), method: :delete, class: 'btn-unlike' %>
+        <% else %>
+          <%= button_to 'Like', post_likes_path(@the_post), method: :post, class: 'btn-like' %>
+        <% end %>
+        <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="post-comments">
+        <h4>Comments (<%= @the_post.comments.count %>)</h4>
+        <div class="comments-list">
+          <% @the_post.comments.each do |comment| %>
+            <div class="comment">
+              <strong><%= comment.user.username.capitalize %>:</strong>
+              <%= comment.content %>
+              <% if comment.user == current_user %>
+                <%= link_to 'Delete', post_comment_path(@the_post, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn-delete-comment' %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Add Comment Form -->
+        <h4>Add a Comment</h4>
+        <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
+          <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
+          <%= form.submit 'Comment', class: 'btn-comment' %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 

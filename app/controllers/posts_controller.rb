@@ -1,53 +1,71 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user! # Ensures user is logged in
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
+  # List all posts in descending order of creation
   def index
     @list_of_posts = Post.all.order(created_at: :desc)
   end
 
+  # Show a single post along with its associated comments and likes
   def show
-    # The @the_post is already set by the `set_post` callback
+    @comments = @post.comments.includes(:user) # Preload users to avoid N+1 queries
+    @like = @post.likes.find_by(user: current_user) # Fetch the current user's like if it exists
+    @the_post = Post.find(params[:id])
   end
 
+  # Initialize a new post
   def new
     @post = current_user.posts.new
   end
 
+  # Create a new post and associate it with the current user
   def create
     @post = current_user.posts.new(post_params)
   
     if @post.save
       redirect_to posts_path, notice: "Post created successfully."
     else
-      render :new, alert: @post.errors.full_messages.to_sentence
+      flash.now[:alert] = @post.errors.full_messages.to_sentence
+      render :new
     end
   end  
 
+  # Edit an existing post
   def edit
     # The @post is already set by the `set_post` callback
   end
 
+  # Update an existing post
   def update
     if @post.update(post_params)
       redirect_to post_path(@post), notice: "Post updated successfully."
     else
-      render :edit, alert: @post.errors.full_messages.to_sentence
+      flash.now[:alert] = @post.errors.full_messages.to_sentence
+      render :edit
     end
   end
 
+  # Delete an existing post
   def destroy
-    @post.destroy
-    redirect_to posts_path, notice: "Post deleted successfully."
+    if @post.destroy
+      redirect_to posts_path, notice: "Post deleted successfully."
+    else
+      redirect_to posts_path, alert: "Unable to delete post."
+    end
   end
 
   private
 
+  # Strong parameters to permit only specific attributes
   def post_params
     params.require(:post).permit(:caption, :image)
   end
 
+  # DRY principle: Set the @post instance variable for actions that require it
   def set_post
     @post = Post.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to posts_path, alert: "Post not found."
   end
 end
