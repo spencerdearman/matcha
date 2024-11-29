@@ -1,25 +1,121 @@
-<h2>Create a New Post</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a New Post</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <style>
+    /* Add relevant styles to match the existing app's form styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
-<%= form_with(model: @post, local: true, html: { enctype: 'multipart/form-data' }) do |f| %>
-  <% if @post.errors.any? %>
-    <div class="error-messages">
-      <ul>
-        <% @post.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+    .form-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      max-width: 100%;
+      margin: 0 auto;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+    }
 
-  <div class="form-inputs">
-    <%= f.label :caption, "Caption" %>
-    <%= f.text_area :caption, rows: 3, maxlength: 500 %>
+    .form-container h2 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
 
-    <%= f.label :image, "Upload Image" %>
-    <%= f.file_field :image, accept: "image/*" %>
+    .form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-inputs label {
+      font-weight: bold;
+    }
+
+    .form-inputs input, .form-inputs textarea {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .form-actions input[type="submit"] {
+      background-color: #0095f6;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .form-actions input[type="submit"]:hover {
+      background-color: #007bb5;
+    }
+
+    .error-messages {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 20px;
+    }
+
+    .error-messages ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .error-messages li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create a New Post</h2>
+
+    <%= form_with(model: @post, local: true, html: { enctype: 'multipart/form-data' }) do |f| %>
+      <% if @post.errors.any? %>
+        <div class="error-messages">
+          <ul>
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-inputs">
+        <%= f.label :caption, "Caption" %>
+        <%= f.text_area :caption, rows: 3, maxlength: 500 %>
+
+        <%= f.label :image, "Upload Image" %>
+        <%= f.file_field :image, accept: "image/*" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Create Post" %>
+      </div>
+    <% end %>
   </div>
-
-  <div class="form-actions">
-    <%= f.submit "Create Post" %>
-  </div>
-<% end %>
+</body>
+</html>

@@ -1,40 +1,157 @@
-<h2>Sign up</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 40px;
+      max-width: 600px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 40px auto;
+    }
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
+    .form-container h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: #333;
+    }
 
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+    .form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
 
-    <!-- Additional Fields -->
-    <%= f.input :username,
-                required: true,
-                input_html: { autocomplete: "username" } %>
+    .form-inputs label {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333;
+    }
 
-    <!-- Profile Image Upload with ActiveStorage -->
-    <%= f.input :image, as: :file, label: "Profile Image" %> <!-- Updated this to use ActiveStorage -->
+    .form-inputs input, .form-inputs textarea, .form-inputs select {
+      padding: 12px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-    <%= f.input :bio,
-                label: "Bio",
-                as: :text,
-                input_html: { rows: 3, maxlength: 500 } %>
+    .form-inputs input[type="file"] {
+      padding: 8px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-actions input[type="submit"], .form-actions button {
+      background-color: #2196F3;
+      color: white;
+      font-size: 1.2em;
+      padding: 15px 25px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .form-actions input[type="submit"]:hover, .form-actions button:hover {
+      background-color: #1976D2;
+    }
+
+    .error-messages {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 20px;
+    }
+
+    .error-messages ul {
+      padding: 0;
+      list-style-type: none;
+    }
+
+    .error-messages li {
+      margin: 5px 0;
+    }
+
+    /* For smaller screens */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 20px;
+        width: 90%;
+      }
+
+      .form-inputs {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Sign up</h2>
+
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs">
+        <%= f.input :email,
+                    required: true,
+                    autofocus: true,
+                    input_html: { autocomplete: "email" } %>
+
+        <%= f.input :password,
+                    required: true,
+                    hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                    input_html: { autocomplete: "new-password" } %>
+
+        <%= f.input :password_confirmation,
+                    required: true,
+                    input_html: { autocomplete: "new-password" } %>
+
+        <%= f.input :username,
+                    required: true,
+                    input_html: { autocomplete: "username" } %>
+
+        <%= f.input :image, as: :file, label: "Profile Image" %> <!-- Profile image upload -->
+
+        <%= f.input :bio,
+                    label: "Bio",
+                    as: :text,
+                    input_html: { rows: 3, maxlength: 500 } %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "Sign up" %>
+      </div>
+    <% end %>
+
+    <%#= render "devise/shared/links" %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</body>
+</html>

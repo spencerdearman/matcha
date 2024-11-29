@@ -6,19 +6,148 @@
   <title>Welcome to Matcha</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 200px;
+      height: 100%;
+      background-color: #333;
+      padding-top: 30px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 4em;
+      font-weight: bold;
+      color: #000;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      font-size: 1.2em;
+      padding: 15px 25px;
+      border-radius: 5px;
+      color: white;
+      text-decoration: none;
+      background-color: #2196F3;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #1976D2;
+    }
+
+    .btn-signup {
+      background-color: #4CAF50;
+    }
+
+    .btn-signup:hover {
+      background-color: #45a049;
+    }
+
+    .btn-login {
+      background-color: #2196F3;
+    }
+
+    .btn-login:hover {
+      background-color: #1976D2;
+    }
+
+    /* Ensure content doesn't overflow or scroll */
+    body, html {
+      height: 100%;
+    }
+
+    .content {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 150px; /* Adjust this value to move content left */
+    }
+
+    /* Sidebar content */
+    .content {
+      margin-left: 150px; /* Adjusted margin-left to move content left */
+      padding: 20px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Hero Section (Welcome Message) -->
-  <div class="hero">
-    <h1>Welcome to Matcha!</h1>
-    <p>Your community for matcha lovers.</p>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>MATCHA</h1>
+    <a href="<%= root_path %>">Home</a>
+    <a href="<%= profile_path %>">Profile</a>
     <% if user_signed_in? %>
-      <p>Welcome back, <%= current_user.username %>!</p>
+      <a href="<%= destroy_user_session_path %>" method="delete">Log out</a>
     <% else %>
-      <p>Sign up or log in to explore more!</p>
+      <a href="<%= new_user_session_path %>">Login</a>
+      <a href="<%= new_user_registration_path %>">Sign Up</a>
     <% end %>
   </div>
-  
+
+  <!-- Main Content (Hero Section) -->
+  <div class="content">
+    <div class="hero">
+      <h1>MATCHA</h1>
+      <p>Welcome</p>
+
+      <!-- Buttons to navigate to login and signup pages -->
+      <div class="hero-buttons">
+        <a href="<%= new_user_session_path %>" class="btn btn-login">Log In</a>
+        <a href="<%= new_user_registration_path %>" class="btn btn-signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
