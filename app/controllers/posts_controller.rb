@@ -1,60 +1,53 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
-  
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
+
   def index
-    matching_posts = Post.all
-
-    @list_of_posts = matching_posts.order({ :created_at => :desc })
-
-    render({ :template => "posts/index" })
+    @list_of_posts = Post.all.order(created_at: :desc)
   end
 
   def show
-    the_id = params.fetch("path_id")
+    # The @the_post is already set by the `set_post` callback
+  end
 
-    matching_posts = Post.where({ :id => the_id })
-
-    @the_post = matching_posts.at(0)
-
-    render({ :template => "posts/show" })
+  def new
+    @post = current_user.posts.new
   end
 
   def create
-    the_post = Post.new
-    the_post.user_id = params.fetch("query_user_id")
-    the_post.content = params.fetch("query_content")
-    the_post.image_url = params.fetch("query_image_url")
-
-    if the_post.valid?
-      the_post.save
-      redirect_to("/posts", { :notice => "Post created successfully." })
+    @post = current_user.posts.new(post_params)
+  
+    if @post.save
+      redirect_to posts_path, notice: "Post created successfully."
     else
-      redirect_to("/posts", { :alert => the_post.errors.full_messages.to_sentence })
+      render :new, alert: @post.errors.full_messages.to_sentence
     end
+  end  
+
+  def edit
+    # The @post is already set by the `set_post` callback
   end
 
   def update
-    the_id = params.fetch("path_id")
-    the_post = Post.where({ :id => the_id }).at(0)
-
-    the_post.user_id = params.fetch("query_user_id")
-    the_post.content = params.fetch("query_content")
-    the_post.image_url = params.fetch("query_image_url")
-
-    if the_post.valid?
-      the_post.save
-      redirect_to("/posts/#{the_post.id}", { :notice => "Post updated successfully."} )
+    if @post.update(post_params)
+      redirect_to post_path(@post), notice: "Post updated successfully."
     else
-      redirect_to("/posts/#{the_post.id}", { :alert => the_post.errors.full_messages.to_sentence })
+      render :edit, alert: @post.errors.full_messages.to_sentence
     end
   end
 
   def destroy
-    the_id = params.fetch("path_id")
-    the_post = Post.where({ :id => the_id }).at(0)
+    @post.destroy
+    redirect_to posts_path, notice: "Post deleted successfully."
+  end
 
-    the_post.destroy
+  private
 
-    redirect_to("/posts", { :notice => "Post deleted successfully."} )
+  def post_params
+    params.require(:post).permit(:caption, :image)
+  end
+
+  def set_post
+    @post = Post.find(params[:id])
   end
 end

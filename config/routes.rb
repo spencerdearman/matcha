@@ -1,16 +1,24 @@
 Rails.application.routes.draw do
+  get 'profiles/show'
   get 'landing/index'
 
   # Devise routes for user authentication
   devise_for :users
 
-  # Define other routes as needed
-  root to: "home#index"  # Replace with your desired root path
-
-  # Landing page after sign-in
+  # For authenticated users, redirect to the landing page
   authenticated :user do
-    root 'landing#index', as: :authenticated_root
+    root 'landing#index', as: :authenticated_root  # Users are redirected to the landing page
   end
+
+  # For unauthenticated users, show the home page (or login page)
+  root to: 'home#index'  # Unauthenticated users will see the home page
+
+  # Routes for the Post resource (Standard RESTful routes)
+  resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
+
+  # Profile route
+  get 'profile', to: 'profiles#show', as: :profile
 
   # Routes for the Like resource:
 

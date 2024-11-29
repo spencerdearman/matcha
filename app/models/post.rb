@@ -3,7 +3,7 @@
 # Table name: posts
 #
 #  id         :bigint           not null, primary key
-#  content    :text
+#  caption    :string
 #  image_url  :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -21,7 +21,9 @@ class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_one_attached :image
 
   # Validations
-  validates :content, presence: true
+  validates :image, presence: true
+  validates :caption, presence: true
 end

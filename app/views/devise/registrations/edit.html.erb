@@ -14,13 +14,20 @@
                 hint: "leave it blank if you don't want to change it",
                 required: false,
                 input_html: { autocomplete: "new-password" } %>
+
     <%= f.input :password_confirmation,
                 required: false,
                 input_html: { autocomplete: "new-password" } %>
+
     <%= f.input :current_password,
                 hint: "we need your current password to confirm your changes",
                 required: true,
                 input_html: { autocomplete: "current-password" } %>
+
+    <!-- Profile Image Upload -->
+    <%= f.input :image, as: :file, label: "Profile Image" %> <!-- ActiveStorage upload input -->
+
+    <%= f.input :bio, label: "Bio", as: :text, input_html: { rows: 3, maxlength: 500 } %>
   </div>
 
   <div class="form-actions">

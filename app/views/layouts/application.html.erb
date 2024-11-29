@@ -1,16 +1,112 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Rails Template</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Matcha</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+</head>
+<body>
+  <!-- Header and Navigation -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="<%= root_path %>">Home</a></li>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+        <% if user_signed_in? %>
 
-  <body>
+          <li><%= link_to 'Profile', profile_path %></li>  <!-- Profile link -->
+          <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
+        <% else %>
+          <li><%= link_to 'Login', new_user_session_path %></li>
+          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+        <% end %>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="content">
     <%= yield %>
-  </body>
+  </div>
+
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2024 Matcha, All Rights Reserved.</p>
+  </footer>
+
+  <!-- Inline Styles (CSS) -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #333;
+      padding: 10px;
+      color: white;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 0;
+      background-color: #fff;
+      margin-top: 30px;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      margin-top: 30px;
+    }
+
+    /* Profile Link Styling (when logged in) */
+    .nav-profile {
+      margin-left: auto;
+      padding-left: 20px;
+    }
+
+    .nav-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .nav-profile span {
+      vertical-align: middle;
+    }
+  </style>
+</body>
 </html>

@@ -3,80 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Matcha</title>
+  <title>Matcha Feed</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><%= link_to 'Home', root_path %></li>
-        <li><%= link_to 'Log out', destroy_user_session_path, method: :get %></li>
-      </ul>
-    </nav>
-  </header>
+  <div class="feed-container">
+    <div class="feed-container-inner">
+      <% if @posts.any? %>
+        <% @posts.each do |post| %>
+          <div class="post">
+            <div class="post-header">
+              <div class="profile-info">
+                <% if post.user.image.attached? %>
+                  <%= image_tag post.user.image, alt: "Profile Picture", class: "profile-pic" %>
+                <% else %>
+                  <%= image_tag "default-profile.png", alt: "Default Profile", class: "profile-pic" %>
+                <% end %>
+                <h3><%= post.user.username %></h3>
+              </div>
+            </div>
 
-  <div class="hero">
-    <h1>Welcome to Matcha, <%= current_user.username %>!</h1>
-    <p>Explore your favorite matcha drinks, cafes, and experiences!</p>
+            <div class="post-body">
+              <% if post.image.attached? %>
+                <%= image_tag post.image, alt: "Post Image", class: "post-image" %>
+              <% end %>
+              <p class="post-caption"><%= post.caption %></p>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p>No posts available.</p>
+      <% end %>
+    </div>
   </div>
 
-  <footer>
-    <p>&copy; 2024 Matcha, All Rights Reserved.</p>
-  </footer>
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
+    /* Overall Feed Container */
+    .feed-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      max-width: 100%;
+      margin: 0 auto;
+      height: auto;
+      flex-direction: column;
     }
 
-    header {
-      background-color: #333;
-      padding: 10px;
-      color: white;
+    /* This inner container will hold all posts */
+    .feed-container-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      justify-content: flex-start;
+      width: 100%;
+      margin-top: 20px;
     }
 
-    nav ul {
-      list-style: none;
-      padding: 0;
+    /* Individual Post Container */
+    .post {
+      width: 100%;
+      max-width: 350px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: white;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin: 0 auto;
+      height: auto;
     }
 
-    nav ul li {
-      display: inline;
-      margin-right: 20px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .hero {
+    /* Post Body (image and caption) */
+    .post-body {
+      margin-top: 10px;
       text-align: center;
-      padding: 100px 0;
-      background-color: #fff;
-      margin-top: 30px;
     }
 
-    .hero h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
+    .post-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
 
-    .hero p {
-      font-size: 1.2em;
+    /* Post Header (username and profile image) */
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
+    .profile-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .post-header h3 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .post-caption {
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* Button for navigation */
+    .btn-edit-profile {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .btn-edit-profile:hover {
+      background-color: #45a049;
+    }
+
+    /* Footer Fix */
     footer {
       text-align: center;
       padding: 10px;
       background-color: #333;
       color: white;
       margin-top: 30px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* Ensuring the whole body scrolls, not just a part of it */
+    body {
+      height: 100vh;
+      overflow-y: auto; /* Allow the entire page to scroll */
+      margin: 0;
     }
   </style>
 </body>

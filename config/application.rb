@@ -33,6 +33,7 @@ module RailsTemplate
     end
 
     config.action_controller.default_protect_from_forgery = false
+    config.active_storage.url_options = { host: "http://localhost:3000" }
 
     # Don't generate system test files.
     config.generators.system_tests = nil

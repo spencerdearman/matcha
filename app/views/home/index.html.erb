@@ -8,21 +8,8 @@
   <%= csp_meta_tag %>
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="<%= root_path %>">Home</a></li>
-        <% if user_signed_in? %>
-          <li><%= link_to 'Go to Dashboard', authenticated_root_path %></li>
-          <li><%= link_to 'Log out', destroy_user_session_path, method: :get %></li>
-        <% else %>
-          <li><%= link_to 'Login', new_user_session_path %></li>
-          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
-        <% end %>
-      </ul>
-    </nav>
-  </header>
 
+    <!-- Hero Section (Welcome Message) -->
   <div class="hero">
     <h1>Welcome to Matcha!</h1>
     <p>Your community for matcha lovers.</p>
@@ -32,63 +19,6 @@
       <p>Sign up or log in to explore more!</p>
     <% end %>
   </div>
-
-  <footer>
-    <p>&copy; 2024 Matcha, All Rights Reserved.</p>
-  </footer>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-
-    header {
-      background-color: #333;
-      padding: 10px;
-      color: white;
-    }
-
-    nav ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    nav ul li {
-      display: inline;
-      margin-right: 20px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 100px 0;
-      background-color: #fff;
-      margin-top: 30px;
-    }
-
-    .hero h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      font-size: 1.2em;
-    }
-
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #333;
-      color: white;
-      margin-top: 30px;
-    }
-  </style>
+  
 </body>
 </html>

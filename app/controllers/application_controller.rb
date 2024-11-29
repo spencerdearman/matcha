@@ -9,9 +9,9 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     # Permit the new fields during sign up
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :image_url, :bio])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :image, :bio])
 
     # Permit the new fields during account update (if needed)
-    devise_parameter_sanitizer.permit(:account_update, keys: [:username, :image_url, :bio])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:username, :image, :bio])
   end
 end

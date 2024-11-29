@@ -6,7 +6,6 @@
 #  bio                    :text
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
-#  image_url              :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
@@ -32,4 +31,7 @@ class User < ApplicationRecord
   has_many :followed_relationships, class_name: 'Follow', foreign_key: 'follower_id', dependent: :destroy
   has_many :followers, through: :followed_relationships, source: :followed
   has_many :cafes, dependent: :destroy
+
+  # Replace image_url with ActiveStorage image attachment
+  has_one_attached :image  # ActiveStorage for profile picture
 end

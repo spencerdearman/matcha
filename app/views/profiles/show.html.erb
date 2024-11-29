@@ -1,0 +1,130 @@
+<div class="profile-header">
+  <div class="profile-info">
+    <h3><%= @user.username %></h3>
+    <p><%= @user.bio %></p>
+  </div>
+  <div class="profile-image">
+    <% if @user.image.attached? %>
+      <%= image_tag @user.image, alt: "Profile Picture", class: "profile-pic" %>
+    <% else %>
+      <%= image_tag "default-profile.png", alt: "Default Profile", class: "profile-pic" %>
+    <% end %>
+  </div>
+</div>
+
+<h2 class="your-posts-heading">Your Posts</h2>
+
+<% if @user.posts.any? %>
+  <div class="profile-posts">
+    <% @user.posts.each do |post| %>
+      <div class="post">
+        <%= image_tag(post.image, alt: 'Post Image', class: 'post-image') if post.image.attached? %>
+        <p><%= post.caption %></p>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>You haven't created any posts yet.</p>
+<% end %>
+
+<%= link_to 'Edit Profile', edit_user_registration_path, class: 'btn-edit-profile' %>
+<%= link_to 'Back to Posts', posts_path %>
+
+<style>
+/* Profile header section - centered content */
+.profile-header {
+  display: flex;
+  justify-content: center; /* Center the profile image and info */
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 40px; /* Padding for the profile section */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Profile info section */
+.profile-info {
+  flex: 1;
+  text-align: center; /* Center the text in the profile info */
+}
+
+/* Profile image section */
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 20px;
+}
+
+/* Profile picture styling */
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* "Your Posts" section title */
+.your-posts-heading {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 40px;
+}
+
+/* Posts section */
+.profile-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 40px; /* Add more padding on the left and right */
+}
+
+/* Individual post styling */
+.profile-posts .post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Post image size */
+.post-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Edit profile button */
+.btn-edit-profile {
+  display: inline-block;
+  margin: 30px 0 30px 20px;  /* Added left margin (20px) to create space on the left */
+  padding: 10px 20px;  /* Padding inside the button */
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit-profile:hover {
+  background-color: #45a049;
+}
+
+/* Back to posts button styling */
+a {
+  text-decoration: none;
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+</style>

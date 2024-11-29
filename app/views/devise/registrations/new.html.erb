@@ -23,9 +23,8 @@
                 required: true,
                 input_html: { autocomplete: "username" } %>
 
-    <%= f.input :image_url,
-                label: "Profile Image URL",
-                input_html: { autocomplete: "url" } %>
+    <!-- Profile Image Upload with ActiveStorage -->
+    <%= f.input :image, as: :file, label: "Profile Image" %> <!-- Updated this to use ActiveStorage -->
 
     <%= f.input :bio,
                 label: "Bio",
