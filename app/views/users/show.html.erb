@@ -8,9 +8,7 @@
   <%= csp_meta_tag %>
 </head>
 <body>
-  <!-- Profile Header Section -->
   <div class="profile-header">
-    <!-- Profile Image -->
     <div class="profile-image">
       <% if @user.image.attached? %>
         <%= image_tag @user.image, alt: "Profile Picture", class: "profile-pic" %>
@@ -19,12 +17,9 @@
       <% end %>
     </div>
 
-    <!-- Profile Info (Username, Edit Profile, Bio) -->
     <div class="profile-info">
       <div class="header">
         <h2><%= @user.username.capitalize %></h2>
-
-        <!-- Follow/Unfollow Button -->
         <% if current_user.following?(@user) %>
           <%= form_with(url: destroy_follow_path(followed_id: @user.id), method: :delete, local: true) do %>
             <%= submit_tag 'Unfollow', class: 'btn-follow' %>
@@ -36,23 +31,17 @@
           <% end %>
         <% end %>
       </div>
-
-      <!-- Bio Section -->
       <div class="bio">
         <p><%= @user.bio %></p>
       </div>
     </div>
   </div>
-
-  <!-- Followers and Following Stats Section -->
   <div class="profile-stats">
     <%= link_to 'Followers', followers_user_path(@user), class: 'btn-follow' %> |
     <%= link_to 'Following', following_user_path(@user), class: 'btn-follow' %>
   </div>
 
-  <!-- User's Posts Section -->
   <h2 class="your-posts-heading"><%= @user.username.capitalize %>'s Posts</h2>
-
   <% if @user.posts.any? %>
     <div class="profile-posts">
       <% @user.posts.each do |post| %>
@@ -65,136 +54,5 @@
   <% else %>
     <p>You haven't created any posts yet.</p>
   <% end %>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-
-    /* Profile Header Section */
-    .profile-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-      background-color: #fff;
-      border-bottom: 1px solid #ccc;
-      width: 100%;
-    }
-
-    /* Profile Image Styling */
-    .profile-image {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 20px;
-    }
-
-    .profile-pic {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Profile Info Styling (Username, Edit Profile, Bio) */
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      width: 300px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      align-items: center;
-    }
-
-    .profile-info h2 {
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
-
-    /* Follow/Unfollow Button */
-    .btn-follow {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-follow:hover {
-      background-color: #45a049;
-    }
-
-    /* Bio Styling */
-    .bio p {
-      font-size: 1.2em;
-      color: #555;
-      text-align: center;
-    }
-
-    /* Followers and Following Stats */
-    .profile-stats {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 1.2em;
-    }
-
-    /* Your Posts Section */
-    .your-posts-heading {
-      text-align: center;
-      padding: 20px 0;
-      font-size: 2.5em;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-
-    .profile-posts {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 0 20px;
-    }
-
-    .post {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .post-image {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #333;
-      color: white;
-      margin-top: 30px;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
-
 </body>
 </html>

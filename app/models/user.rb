@@ -27,28 +27,20 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :follower_relationships, class_name: 'Follow', foreign_key: 'followed_id', dependent: :destroy
-  has_many :followed_users, through: :follower_relationships, source: :follower
+  has_many :followers, through: :follower_relationships, source: :follower
   has_many :followed_relationships, class_name: 'Follow', foreign_key: 'follower_id', dependent: :destroy
-  has_many :followers, through: :followed_relationships, source: :followed
-  has_many :cafes, dependent: :destroy
-
-  # ActiveStorage for profile picture
+  has_many :followed_users, through: :followed_relationships, source: :followed
   has_one_attached :image
 
-  # Methods to handle following and unfollowing users
   def follow(user)
-    # Reversed logic: we want to associate the current user as "followed"
-    self.followed_users << user unless self == user
+    followed_relationships.create(followed_id: user.id) unless self == user || following?(user)
   end
 
   def unfollow(user)
-    # Reversed logic: we want to remove the association as followed
-    self.followed_users.delete(user)
+    followed_relationships.find_by(followed_id: user.id)&.destroy
   end
 
-  # Helper method to check if the user is following someone (reversed logic here too)
   def following?(user)
-    # Reverse check: if current user is NOT the follower, but is being followed
     followed_users.include?(user)
   end
 end

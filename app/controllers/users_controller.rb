@@ -7,11 +7,11 @@ class UsersController < ApplicationController
 
   def followers
     @user = User.find(params[:id])
-    @followers = @user.followed_users  # Reverse logic, now followers are those followed by @user
+    @followers = @user.followers
   end
 
   def following
     @user = User.find(params[:id])
-    @following = @user.followers  # Reverse logic, now following are those who follow @user
+    @following = @user.followed_users
   end
 end
