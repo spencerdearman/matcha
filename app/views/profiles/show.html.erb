@@ -7,7 +7,26 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <style>
-    /* Same profile page styles as before */
+    /* Common button styles */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      color: white;
+      border: none; /* Removes the border */
+      cursor: pointer; /* Adds a pointer cursor for better UX */
+    }
+
+    .btn-edit {
+      background-color: #558255; /* Same color as Follow button */
+    }
+
+    .btn-edit:hover {
+      background-color: #476e47; /* Hover effect */
+    }
+
+    /* General styles */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -23,7 +42,7 @@
       max-width: 1400px;
       min-width: 600px;
       margin: 40px auto;
-      gap: 20px;
+      gap: 20px; /* Space between username and button */
       background-color: #fff;
       border-radius: 15px;
       padding: 40px;
@@ -55,6 +74,7 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      gap: 40px; /* Ensures consistent spacing */
     }
 
     .profile-info h2 {
@@ -76,29 +96,13 @@
       color: #333;
     }
 
-    .btn {
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      color: white;
-    }
-
-    .btn-edit {
-      background-color: #4CAF50;
-    }
-
-    .btn-edit:hover {
-      background-color: #45a049;
-    }
-
     .btn-new-post {
-      background-color: #2196F3;
+      background-color: #d8b380;
       margin-top: 10px;
     }
 
     .btn-new-post:hover {
-      background-color: #1976D2;
+      background-color: #bf9f73;
     }
 
     .bio p {
