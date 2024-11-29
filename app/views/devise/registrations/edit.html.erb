@@ -1,42 +1,175 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 40px;
+      max-width: 600px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 40px auto;
+    }
 
-  <div class="form-inputs">
-    <%= f.input :email, required: true, autofocus: true %>
+    .form-container h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: #333;
+    }
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+    .form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .form-inputs label {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-inputs input, .form-inputs textarea, .form-inputs select {
+      padding: 12px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-inputs input[type="file"] {
+      padding: 8px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-actions input[type="submit"], .form-actions button {
+      background-color: #2196F3;
+      color: white;
+      font-size: 1.2em;
+      padding: 15px 25px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .form-actions input[type="submit"]:hover, .form-actions button:hover {
+      background-color: #1976D2;
+    }
+
+    .cancel-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .cancel-section button {
+      background-color: #e63946;
+      color: white;
+      font-size: 1em;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .cancel-section button:hover {
+      background-color: #cc2b3c;
+    }
+
+    .cancel-section a {
+      margin-top: 20px;
+      text-decoration: none;
+      font-size: 1em;
+      color: #2196F3;
+    }
+
+    /* For smaller screens */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 20px;
+        width: 90%;
+      }
+
+      .form-inputs {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Edit Profile</h2>
+
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs">
+        <%= f.input :email, required: true, autofocus: true %>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+        <% end %>
+
+        <%= f.input :password,
+                    hint: "Leave it blank if you don't want to change it",
+                    required: false,
+                    input_html: { autocomplete: "new-password" } %>
+
+        <%= f.input :password_confirmation,
+                    required: false,
+                    input_html: { autocomplete: "new-password" } %>
+
+        <%= f.input :current_password,
+                    hint: "We need your current password to confirm your changes",
+                    required: true,
+                    input_html: { autocomplete: "current-password" } %>
+
+        <!-- Profile Image Upload -->
+        <%= f.input :image, as: :file, label: "Profile Image" %>
+
+        <!-- Bio -->
+        <%= f.input :bio, label: "Bio", as: :text, input_html: { rows: 3, maxlength: 500 } %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "Update" %>
+      </div>
     <% end %>
 
-    <%= f.input :password,
-                hint: "leave it blank if you don't want to change it",
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-
-    <%= f.input :password_confirmation,
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-
-    <%= f.input :current_password,
-                hint: "we need your current password to confirm your changes",
-                required: true,
-                input_html: { autocomplete: "current-password" } %>
-
-    <!-- Profile Image Upload -->
-    <%= f.input :image, as: :file, label: "Profile Image" %> <!-- ActiveStorage upload input -->
-
-    <%= f.input :bio, label: "Bio", as: :text, input_html: { rows: 3, maxlength: 500 } %>
+    <div class="cancel-section">
+      <h3>Cancel My Account</h3>
+      <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "cancel-button" %>
+      <br>
+      <%= link_to "Back", :back, class: "back-link" %>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</body>
+</html>

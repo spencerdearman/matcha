@@ -40,7 +40,41 @@
       font-size: 18px;
     }
 
-    /* Header */
+    /* Sidebar title */
+    .sidebar h1 {
+      font-size: 35px;  /* Increase font size for "MATCHA" */
+      font-weight: bold;
+      margin-bottom: 30px;  /* Add space below the title */
+    }
+
+    /* Ensure the link does not override font size */
+    .sidebar h1 a {
+      color: white;
+      text-decoration: none;
+      font-size: 35px;
+    }
+
+    /* Logout button */
+    .logout-button {
+      position: absolute;
+      bottom: 50px; /* Place slightly above the bottom */
+      left: 10px;   /* Align with the sidebar padding */
+      background-color: #e63946;
+      color: white;
+      font-size: 16px;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: calc(100% - 40%); /* Fit within the sidebar width */
+      text-align: center;
+    }
+
+    .logout-button:hover {
+      background-color: #cc2b3c;
+    }
+
+    /* Header for content section */
     header {
       background-color: #333;
       padding: 10px;
@@ -127,20 +161,26 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h1>MATCHA</h1>
-    <a href="<%= root_path %>">Home</a>
-    <a href="<%= profile_path %>">Profile</a>
+    <h1><a href="<%= root_path %>" style="color: white; text-decoration: none;">MATCHA</a></h1>
     <% if user_signed_in? %>
-      <a href="<%= destroy_user_session_path %>" method="delete">Log out</a>
+      <a href="<%= root_path %>">Feed</a>
+      <a href="<%= profile_path %>">Profile</a>
     <% else %>
+      <a href="<%= root_path %>">Home</a>
       <a href="<%= new_user_session_path %>">Login</a>
       <a href="<%= new_user_registration_path %>">Sign Up</a>
+    <% end %>
+
+    <% if user_signed_in? %>
+  <!--    <a href="<%#= destroy_user_session_path %>" method="delete">Log out</a>-->
+      <%#= button_to "Sign out", destroy_user_session_path, method: :delete, class: "logout-button" %>
+      <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "logout-button" %>
     <% end %>
   </div>
 
   <!-- Main Content -->
   <div class="content">
-    <%= yield %>  <!-- Main content like the feed will be rendered here -->
+    <%= yield %> <!-- Main content like the feed will be rendered here -->
   </div>
 
 </body>
