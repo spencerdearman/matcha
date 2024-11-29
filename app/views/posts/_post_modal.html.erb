@@ -1,46 +1,46 @@
-<!-- app/views/posts/_post_modal.html.erb -->
-<div id="post-modal-<%= post.id %>" class="modal">
+<div id="postModal" class="modal">
   <div class="modal-content">
-    <!-- Modal Close Button -->
-    <span class="close" data-modal-id="post-modal-<%= post.id %>">&times;</span>
 
-    <!-- Post Image -->
-    <div class="modal-image">
-      <% if post.image.attached? %>
-        <%= image_tag post.image, alt: "Post Image", class: "post-modal-image" %>
-      <% end %>
-    </div>
-
-    <!-- Post Info -->
-    <div class="modal-info">
-      <h3><%= post.user.username.capitalize %></h3>
-      <p><%= post.caption %></p>
-      <hr>
-
-      <!-- Likes and Comments Section -->
-      <div class="modal-actions">
-        <% if post.liked_by?(current_user) %>
-          <%= button_to '', post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: 'modal-icon-heart-filled' %>
-        <% else %>
-          <%= button_to '', post_likes_path(post), method: :post, class: 'modal-icon-heart-outline' %>
+    <!-- Post Content -->
+    <div class="post-container">
+      <!-- Left Side: Post Image -->
+      <div class="post-main">
+        <div class="post-header">
+          <%= image_tag(@the_post.user.image.attached? ? @the_post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic") %>
+          <span class="username"><%= @the_post.user.username %></span>
+        </div>
+        <% if @the_post.image.attached? %>
+          <%= image_tag(rails_blob_path(@the_post.image, only_path: true), alt: 'Post Image', class: 'post-image-large') %>
         <% end %>
-        <span><%= post.likes.count %> <%= 'Like'.pluralize(post.likes.count) %></span>
       </div>
 
-      <h4>Comments (<%= post.comments.count %>)</h4>
-      <ul class="modal-comments-list">
-        <% post.comments.each do |comment| %>
-          <li>
-            <strong><%= comment.user.username %>:</strong> <%= comment.content %>
-          </li>
-        <% end %>
-      </ul>
+      <!-- Right Side: Comments and Interactions -->
+      <div class="post-sidebar">
+        <!-- Like Section -->
+        <div class="post-likes">
+          <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
+        </div>
 
-      <!-- Add Comment Form -->
-      <%= form_with(model: [post, Comment.new], local: true, html: { class: 'modal-comment-form' }) do |form| %>
-        <%= form.text_field :content, placeholder: 'Add a comment...', class: 'modal-comment-input' %>
-        <%= form.submit 'Post', class: 'modal-comment-submit' %>
-      <% end %>
+        <!-- Comments Section -->
+        <div class="comments-container">
+          <h3>Comments</h3>
+          <ul class="comments-list">
+            <% @the_post.comments.each do |comment| %>
+              <li>
+                <strong><%= comment.user.username %>:</strong> <%= comment.content %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <!-- Add Comment Form -->
+        <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
+          <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
+          <div class="comment-button-wrapper">
+            <%= form.submit 'Post', class: 'btn-comment' %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

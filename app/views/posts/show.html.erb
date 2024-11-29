@@ -1,131 +1,177 @@
-<h1>Post Details</h1>
+<div class="post-container">
 
-<div class="modal" id="post-modal">
-  <div class="modal-content">
-    <!-- Static image section -->
-    <div class="post-image-section">
-      <% if @the_post.image.attached? %>
-        <%= image_tag(@the_post.image, alt: 'Post Image', class: 'post-modal-image') %>
-      <% end %>
+  <!-- Left Side: Post Image -->
+  <div class="post-main">
+
+    
+    <div class="post-header">
+      <%= image_tag(@the_post.user.image.attached? ? @the_post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic") %>
+      <span class="username"><%= @the_post.user.username %></span>
+    </div>
+    <% if @the_post.image.attached? %>
+      <%= image_tag(rails_blob_path(@the_post.image, only_path: true), alt: 'Post Image', class: 'post-image-large') %>
+    <% end %>
+  </div>
+
+  <!-- Right Side: Comments and Interactions -->
+  <div class="post-sidebar">
+
+    <!-- Comments Section -->
+    <div class="comments-container">
+      <h3>Comments</h3>
+      <ul class="comments-list">
+        <% @the_post.comments.each do |comment| %>
+          <li>
+            <strong><%= comment.user.username %>:</strong> <%= comment.content %>
+          </li>
+        <% end %>
+      </ul>
     </div>
 
-    <!-- Comments sidebar -->
-    <div class="post-comments-section">
-      <span class="close" id="close-modal">&times;</span>
-
-      <!-- Post Caption -->
-      <h3 class="post-caption">
-        <strong><%= @the_post.user.username.capitalize %>:</strong>
-        <%= @the_post.caption %>
-      </h3>
-
-      <!-- Likes Section -->
-      <div class="post-likes">
-        <% if @the_post.liked_by?(current_user) %>
-          <%= button_to 'Unlike', post_like_path(@the_post, @the_post.likes.find_by(user: current_user)), method: :delete, class: 'btn-unlike' %>
-        <% else %>
-          <%= button_to 'Like', post_likes_path(@the_post), method: :post, class: 'btn-like' %>
-        <% end %>
-        <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
-      </div>
-
-      <!-- Comments Section -->
-      <div class="post-comments">
-        <h4>Comments (<%= @the_post.comments.count %>)</h4>
-        <div class="comments-list">
-          <% @the_post.comments.each do |comment| %>
-            <div class="comment">
-              <strong><%= comment.user.username.capitalize %>:</strong>
-              <%= comment.content %>
-              <% if comment.user == current_user %>
-                <%= link_to 'Delete', post_comment_path(@the_post, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn-delete-comment' %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-
-        <!-- Add Comment Form -->
-        <h4>Add a Comment</h4>
-        <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
-          <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
-          <%= form.submit 'Comment', class: 'btn-comment' %>
-        <% end %>
-      </div>
+     <!-- Like Section -->
+    <div class="post-likes">
+      <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
     </div>
+
+    <!-- Add Comment Form -->
+    <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
+      <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
+      <div class="form-spacing">
+        <%= form.submit 'Post', class: 'btn-comment' %>
+      </div>
+    <% end %>
   </div>
 </div>
 
 <style>
-  .post-details {
-    margin: 20px;
-    padding: 20px;
+  /* Modal Container */
+  .post-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 80%;
+    max-height: 90vh; /* Prevent modal from overflowing */
+    margin: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .post-image {
+  /* Close Button */
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Left Side: Post Image */
+  .post-main {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    padding: 20px; /* Increased padding for more space */
     width: 100%;
-    max-width: 600px;
-    border-radius: 10px;
-    margin-bottom: 20px;
   }
 
-  .post-caption {
-    font-size: 1.5em;
-    margin: 10px 0;
-    color: #333;
+  .profile-pic {
+    width: 45px; /* Slightly larger profile picture */
+    height: 45px;
+    border-radius: 50%;
+    padding: 10px;
+    margin-left: 10px;
   }
 
-  .post-actions {
-    margin: 20px 0;
+  .username {
+    font-weight: bold;
+    font-size: 16px; /* Slightly larger font size */
   }
 
-  .btn-edit, .btn-delete, .btn-back, .btn-like, .btn-unlike, .btn-comment {
-    display: inline-block;
-    margin-right: 10px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1em;
-    color: white;
-    background-color: #4CAF50;
-    transition: background-color 0.3s ease;
+  .post-image-large {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    object-fit: contain;
   }
 
-  .btn-delete {
-    background-color: red;
-  }
-
-  .btn-edit:hover, .btn-delete:hover, .btn-back:hover, .btn-like:hover, .btn-unlike:hover, .btn-comment:hover {
-    background-color: #45a049;
-  }
-
-  .btn-delete:hover {
-    background-color: darkred;
+  /* Right Side: Comments and Interactions */
+  .post-sidebar {
+    flex: 1.5;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-left: 1px solid #dbdbdb;
+    overflow-y: auto;
   }
 
   .post-likes {
-    margin: 20px 0;
-    font-size: 1.2em;
+    font-size: 14px;
+    color: #262626;
+    margin-bottom: 20px;
   }
 
-  .post-comments {
-    margin-top: 40px;
+  .comments-container {
+    flex: 1;
+    overflow-y: auto;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+    width: 100%;
   }
 
   .comments-list {
     list-style: none;
     padding: 0;
+    margin: 0;
+    width: 100%;
   }
 
   .comments-list li {
-    margin-bottom: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
   }
 
   .comment-field {
-    width: calc(100% - 100px);
+    width: calc(100% - 10px);
     padding: 10px;
-    margin-right: 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+  }
+
+  .form-spacing {
+    margin-top: 20px; /* Space above Post button */
+  }
+
+  .btn-comment {
+    padding: 10px 20px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-like {
+    background: none;
+    border: none;
+    color: #0095f6;
+    cursor: pointer;
+    font-weight: bold;
   }
 </style>

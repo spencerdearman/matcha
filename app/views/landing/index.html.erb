@@ -1,256 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matcha Feed</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-</head>
-<body>
-  <div class="feed-container">
-    <div class="feed-container-inner">
-      <% if @posts.any? %>
-        <% @posts.each do |post| %>
-          <div class="post" id="post-<%= post.id %>">
-            <!-- Post Header -->
-            <div class="post-header">
-              <div class="profile-info">
-                <% if post.user == current_user %>
-                  <a href="<%= profile_path %>">
-                    <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
-                    <h3><%= post.user.username.capitalize %></h3>
-                  </a>
-                <% else %>
-                  <a href="<%= user_path(post.user) %>">
-                    <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
-                    <h3><%= post.user.username.capitalize %></h3>
-                  </a>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matcha Feed</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+  </head>
+  <body>
+    <div class="feed-container">
+      <div class="feed-container-inner">
+        <% if @posts.any? %>
+          <% @posts.each do |post| %>
+            <div class="post" id="post-<%= post.id %>">
+              <!-- Post Header -->
+              <div class="post-header">
+                <div class="profile-info">
+                  <% if post.user == current_user %>
+                    <a href="<%= profile_path %>">
+                      <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
+                      <h3><%= post.user.username.capitalize %></h3>
+                    </a>
+                  <% else %>
+                    <a href="<%= user_path(post.user) %>">
+                      <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
+                      <h3><%= post.user.username.capitalize %></h3>
+                    </a>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="post-body">
+                <% if post.image.attached? %>
+                  <%= image_tag post.image, alt: "Post Image", class: "post-image" %>
                 <% end %>
               </div>
-            </div>
 
-            <!-- Post Body -->
-            <div class="post-body">
-              <% if post.image.attached? %>
-                <%= image_tag post.image, alt: "Post Image", class: "post-image" %>
-              <% end %>
-            </div>
-
-            <!-- Like and Comment Actions -->
-            <div class="post-actions">
-              <% if post.liked_by?(current_user) %>
-                <%= button_to post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: 'icon-heart-filled no-border' do %>
-                  <%= image_tag 'filled-love.png', alt: 'Unlike', class: 'icon' %>
+              <!-- Like and Comment Actions -->
+              <div class="post-actions">
+                <% if post.liked_by?(current_user) %>
+                  <%= button_to post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: 'icon-heart-filled no-border' do %>
+                    <%= image_tag 'filled-love.png', alt: 'Unlike', class: 'icon' %>
+                  <% end %>
+                <% else %>
+                  <%= button_to post_likes_path(post), method: :post, class: 'icon-heart-outline no-border' do %>
+                    <%= image_tag 'love.png', alt: 'Like', class: 'icon' %>
+                  <% end %>
                 <% end %>
-              <% else %>
-                <%= button_to post_likes_path(post), method: :post, class: 'icon-heart-outline no-border' do %>
-                  <%= image_tag 'love.png', alt: 'Like', class: 'icon' %>
-                <% end %>
-              <% end %>
-              <span><%= post.likes.count %> <%= 'Like'.pluralize(post.likes.count) %></span>
+                <span><%= post.likes.count %> <%= 'Like'.pluralize(post.likes.count) %></span>
 
-              <!-- Comment Icon -->
-              <a href="#" class="icon-comment" data-post-id="<%= post.id %>">
-                <%= image_tag 'message.png', alt: 'Comments', class: 'icon' %>
-              </a>
-              <span><%= post.comments.count %> <%= 'Comment'.pluralize(post.comments.count) %></span>
+                <!-- Comment Icon -->
+                <a href="#" class="icon-comment" data-post-id="<%= post.id %>">
+                  <%= image_tag 'message.png', alt: 'Comments', class: 'icon' %>
+                </a>
+                <span><%= post.comments.count %> <%= 'Comment'.pluralize(post.comments.count) %></span>
+              </div>
+
+              <!-- Post Caption -->
+              <p class="post-caption"><strong><%= post.user.username.capitalize %>:</strong> <%= post.caption %></p>
             </div>
-
-            <!-- Post Caption -->
-            <p class="post-caption"><strong><%= post.user.username.capitalize %>:</strong> <%= post.caption %></p>
-          </div>
+          <% end %>
+        <% else %>
+          <p>No posts available.</p>
         <% end %>
-      <% else %>
-        <p>No posts available.</p>
-      <% end %>
+      </div>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div id="postModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div id="modal-content"></div>
+    <!-- Modal -->
+    <div id="postModal" class="modal">
+      <div class="modal-content">
+        <!-- Close Button -->
+        <button id="close-modal" class="close-modal">&times;</button>
+        <div id="modal-content"></div>
+      </div>
     </div>
-  </div>
 
-  <style>
-    /* Feed Container */
-    .feed-container {
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-      max-width: 100%;
-      margin: 0 auto;
-      flex-direction: column;
-    }
+    <style>
+      /* Feed Container */
+      .feed-container {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        max-width: 100%;
+        margin: 0 auto;
+        flex-direction: column;
+      }
 
-    .feed-container-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      justify-content: flex-start;
-      width: 100%;
-      margin-top: 20px;
-    }
+      .feed-container-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 20px;
+      }
 
-    /* Post */
-    .post {
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: white;
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 0 auto;
-    }
+      /* Post */
+      .post {
+        width: 100%;
+        max-width: 500px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: white;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+      }
 
-    .post-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+      .post-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
 
-    .profile-info {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
+      .profile-info {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
 
-    .profile-info a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
+      .profile-info a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
 
-    .profile-pic {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 10px;
-    }
+      .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+        padding: 5px;
+      }
 
-    /* Adjusting Post Body and Image */
-    .post-body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      max-height: unset; /* Allow the post to grow dynamically */
-    }
+      .username {
+        font-weight: bold;
+        font-size: 14px;
+      }
 
-    .post-image {
-      width: 100%;
-      height: auto; /* Maintain aspect ratio */
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    
-    /* Like and Comment Actions */
-    .post-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
+      /* Adjusting Post Body and Image */
+      .post-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: unset; /* Allow the post to grow dynamically */
+      }
 
-    .icon {
-      width: 24px;
-      height: 24px;
-    }
+      .post-image {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
 
-    /* Removing the box around buttons */
-    .no-border {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-    }
+      /* Like and Comment Actions */
+      .post-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #555;
+      }
 
-    .no-border img {
-      display: inline-block;
-    }
+      .icon {
+        width: 24px;
+        height: 24px;
+      }
 
-    .post-caption {
-      margin-top: 10px;
-      font-size: 14px;
-      text-align: left;
-    }
+      /* Removing the box around buttons */
+      .no-border {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
 
-    /* Modal Styles */
-    .modal {
-      display: none; /* Initially hidden */
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.8);
-    }
+      .no-border img {
+        display: inline-block;
+      }
 
-    .modal-content {
-      position: relative;
-      margin: auto;
-      padding: 20px;
-      background: #fff;
-      max-width: 800px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+      .post-caption {
+        margin-top: 10px;
+        font-size: 14px;
+        text-align: left;
+      }
 
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
+      /* Modal Styles */
+      .modal {
+        display: none; /* Initially hidden */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+      }
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const modal = document.getElementById('postModal');
-      const modalContent = document.getElementById('modal-content');
-      const closeBtn = document.querySelector('.close');
+      .modal-content {
+        position: relative;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        max-width: 800px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
 
-      document.querySelectorAll('.icon-comment').forEach((button) => {
-        button.addEventListener('click', async (e) => {
-          e.preventDefault();
-          const postId = e.target.closest('a').dataset.postId;
+      .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+    </style>
 
-          // Fetch the modal content for the post
-          const response = await fetch(`/posts/${postId}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('postModal');
+        const modalContent = document.getElementById('modal-content');
+        const closeBtn = document.getElementById('close-modal');
+
+        if (!modal || !modalContent || !closeBtn) {
+          console.error('Modal or close button element is missing.');
+          return;
+        }
+
+        // Open modal on comment click
+        document.querySelectorAll('.icon-comment').forEach((button) => {
+          button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const postId = e.target.closest('a').dataset.postId;
+
+            try {
+              // Fetch content for modal
+              const response = await fetch(`/posts/${postId}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+              });
+
+              if (!response.ok) {
+                console.error(`Failed to fetch post data: ${response.statusText}`);
+                return;
+              }
+
+              const data = await response.text();
+              modalContent.innerHTML = data;
+
+              // Show modal
+              modal.style.display = 'flex';
+
+              // Rebind close button listener after content update
+              closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+              });
+            } catch (error) {
+              console.error('Error fetching modal content:', error);
+            }
           });
-          const data = await response.text();
+        });
 
-          // Insert the fetched content into the modal
-          modalContent.innerHTML = data;
+        // Close modal on button click
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
 
-          // Display the modal
-          modal.style.display = 'block';
+        // Close modal and refresh page when clicking outside modal content
+        window.addEventListener('click', (event) => {
+          if (event.target === modal) {
+            modal.style.display = 'none';
+            location.reload();  // Refresh the page when clicking outside the modal
+          }
         });
       });
-
-      // Close the modal when the close button is clicked
-      closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
-
-      // Close the modal when clicking outside the modal content
-      window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

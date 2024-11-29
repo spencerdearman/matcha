@@ -12,6 +12,24 @@ class PostsController < ApplicationController
     @comments = @post.comments.includes(:user) # Preload users to avoid N+1 queries
     @like = @post.likes.find_by(user: current_user) # Fetch the current user's like if it exists
     @the_post = Post.find(params[:id])
+  
+    respond_to do |format|
+      format.html # Default behavior: renders the `show.html.erb` view
+      format.json do
+        render json: {
+          id: @the_post.id,
+          image_url: url_for(@the_post.image),
+          caption: @the_post.caption,
+          user: { id: @the_post.user.id, username: @the_post.user.username },
+          comments: @the_post.comments.map do |comment|
+            {
+              content: comment.content,
+              user: { id: comment.user.id, username: comment.user.username }
+            }
+          end
+        }
+      end
+    end
   end
 
   # Initialize a new post
