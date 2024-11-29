@@ -15,12 +15,20 @@
           <div class="post">
             <div class="post-header">
               <div class="profile-info">
-                <% if post.user.image.attached? %>
-                  <%= image_tag post.user.image, alt: "Profile Picture", class: "profile-pic" %>
+                <!-- Conditional Link for Username -->
+                <% if post.user == current_user %>
+                  <!-- If it's the current user, link to their profile -->
+                  <a href="<%= profile_path %>">
+                    <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
+                    <h3><%= post.user.username.capitalize %></h3>
+                  </a>
                 <% else %>
-                  <%= image_tag "default-profile.png", alt: "Default Profile", class: "profile-pic" %>
+                  <!-- If it's another user, link to that user's profile -->
+                  <a href="<%= user_path(post.user) %>">
+                    <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
+                    <h3><%= post.user.username.capitalize %></h3>
+                  </a>
                 <% end %>
-                <h3><%= post.user.username %></h3>
               </div>
             </div>
 
@@ -101,6 +109,12 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
+    }
+
+    .profile-info a {
+      display: flex;
+      align-items: center;
+      text-decoration: none; /* Removes the underline from the link */
     }
 
     .profile-pic {

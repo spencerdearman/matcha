@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'users/show'
   get 'profiles/show'
   get 'landing/index'
 
@@ -16,6 +17,7 @@ Rails.application.routes.draw do
   # Routes for the Post resource (Standard RESTful routes)
   resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
+  resources :users, only: [:show]
 
   # Profile route
   get 'profile', to: 'profiles#show', as: :profile

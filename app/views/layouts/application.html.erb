@@ -6,107 +6,142 @@
   <title>Welcome to Matcha</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-</head>
-<body>
-  <!-- Header and Navigation -->
-  <header>
-    <nav>
-      <ul>
-        <li><a href="<%= root_path %>">Home</a></li>
-
-        <% if user_signed_in? %>
-
-          <li><%= link_to 'Profile', profile_path %></li>  <!-- Profile link -->
-          <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
-        <% else %>
-          <li><%= link_to 'Login', new_user_session_path %></li>
-          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
-        <% end %>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <div class="content">
-    <%= yield %>
-  </div>
-
-
-  <!-- Footer Section -->
-  <footer>
-    <p>&copy; 2024 Matcha, All Rights Reserved.</p>
-  </footer>
-
-  <!-- Inline Styles (CSS) -->
   <style>
+    /* Body and overall layout */
     body {
+      display: flex;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
+      height: 100vh;
     }
 
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 200px;
+      height: 100%;
+      background-color: #333;
+      padding-top: 30px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Sidebar links */
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    /* Header */
     header {
       background-color: #333;
       padding: 10px;
       color: white;
+      position: fixed;
+      width: calc(100% - 200px);
+      left: 200px;
+      top: 0;
+      z-index: 10;
     }
 
-    nav ul {
-      list-style: none;
-      padding: 0;
+    header h1 {
+      margin: 0;
+      font-size: 24px;
     }
 
-    nav ul li {
-      display: inline;
-      margin-right: 20px;
+    /* Content section */
+    .content {
+      margin-left: 200px;
+      padding: 20px;
+      padding-top: 80px; /* Add some padding to avoid overlap with the header */
+      width: calc(100% - 200px);
+      overflow-y: scroll;
+      height: 100%;
     }
 
-    nav ul li a {
-      color: white;
-      text-decoration: none;
+    /* Feed container */
+    .feed-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .hero {
+    /* Individual Post Container */
+    .post {
+      width: 100%;
+      max-width: 350px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: white;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .post-body {
+      margin-top: 10px;
       text-align: center;
-      padding: 100px 0;
-      background-color: #fff;
-      margin-top: 30px;
     }
 
-    .hero h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
+    .post-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
 
-    .hero p {
-      font-size: 1.2em;
+    .profile-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
     }
 
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #333;
-      color: white;
-      margin-top: 30px;
-    }
-
-    /* Profile Link Styling (when logged in) */
-    .nav-profile {
-      margin-left: auto;
-      padding-left: 20px;
-    }
-
-    .nav-profile img {
-      width: 40px;
-      height: 40px;
+    .profile-pic {
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
+      object-fit: cover;
       margin-right: 10px;
     }
 
-    .nav-profile span {
-      vertical-align: middle;
+    .post-header h3 {
+      font-size: 16px;
+      font-weight: bold;
     }
   </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>MATCHA</h1>
+    <a href="<%= root_path %>">Home</a>
+    <a href="<%= profile_path %>">Profile</a>
+    <% if user_signed_in? %>
+      <a href="<%= destroy_user_session_path %>" method="delete">Log out</a>
+    <% else %>
+      <a href="<%= new_user_session_path %>">Login</a>
+      <a href="<%= new_user_registration_path %>">Sign Up</a>
+    <% end %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <%= yield %>  <!-- Main content like the feed will be rendered here -->
+  </div>
+
 </body>
 </html>
