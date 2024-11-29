@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Matcha</title>
+  <title><%= @user.username %>'s Profile</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 </head>
 <body>
-  <!-- Profile Header with Vertical Frame Layout -->
+  <!-- Profile Header Section -->
   <div class="profile-header">
     <!-- Profile Image -->
     <div class="profile-image">
@@ -19,11 +19,24 @@
       <% end %>
     </div>
 
-    <!-- Profile Info (Username, Bio) -->
+    <!-- Profile Info (Username, Edit Profile, Bio) -->
     <div class="profile-info">
       <div class="header">
-        <!-- Username -->
         <h2><%= @user.username.capitalize %></h2>
+
+        <!-- Follow/Unfollow Button -->
+        <% if current_user.followed_users.include?(@user) %>
+          <!-- If user is already following -->
+          <%= form_with(url: destroy_follow_path(followed_id: @user.id), method: :delete, local: true) do %>
+            <%= submit_tag 'Unfollow', class: 'btn-follow' %>
+          <% end %>
+        <% else %>
+          <!-- If user is not following -->
+          <%= form_with(url: create_follow_path, method: :post, local: true) do %>
+            <%= hidden_field_tag :followed_id, @user.id %>
+            <%= submit_tag 'Follow', class: 'btn-follow' %>
+          <% end %>
+        <% end %>
       </div>
 
       <!-- Bio Section -->
@@ -31,6 +44,12 @@
         <p><%= @user.bio %></p>
       </div>
     </div>
+  </div>
+
+  <!-- Followers and Following Stats Section -->
+  <div class="profile-stats">
+    <%= link_to 'Followers', followers_user_path(@user), class: 'btn-follow' %> |
+    <%= link_to 'Following', following_user_path(@user), class: 'btn-follow' %>
   </div>
 
   <!-- User's Posts Section -->
@@ -60,7 +79,7 @@
     /* Profile Header Section */
     .profile-header {
       display: flex;
-      justify-content: center;  /* Center the profile section */
+      justify-content: center;
       align-items: center;
       padding: 40px;
       background-color: #fff;
@@ -83,19 +102,20 @@
       object-fit: cover;
     }
 
-    /* Profile Info Styling (Username, Bio) */
+    /* Profile Info Styling (Username, Edit Profile, Bio) */
     .profile-info {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      align-items: center;  /* Center the content in the profile info */
+      align-items: center;
       width: 300px;
     }
 
     .header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       width: 100%;
+      align-items: center;
     }
 
     .profile-info h2 {
@@ -103,11 +123,32 @@
       margin-bottom: 10px;
     }
 
+    /* Follow/Unfollow Button */
+    .btn-follow {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-follow:hover {
+      background-color: #45a049;
+    }
+
     /* Bio Styling */
     .bio p {
       font-size: 1.2em;
       color: #555;
-      text-align: center;  /* Center the bio text */
+      text-align: center;
+    }
+
+    /* Followers and Following Stats */
+    .profile-stats {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2em;
     }
 
     /* Your Posts Section */

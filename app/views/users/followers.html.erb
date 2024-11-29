@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @user.username %>'s Followers</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      text-align: center;
+    }
+
+    li {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+
+    .btn-back {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h2><%= @user.username %>'s Followers</h2>
+
+  <% if @followers.any? %>
+    <ul>
+      <% @followers.each do |follower| %>
+        <li>
+          <%= link_to follower.username, user_path(follower), class: 'btn-follow' %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="no-followers">No followers yet.</p>
+  <% end %>
+
+  <%= link_to 'Back to Profile', user_path(@user), class: 'btn-back' %>
+
+</body>
+</html>

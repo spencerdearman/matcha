@@ -23,6 +23,5 @@ class Follow < ApplicationRecord
   belongs_to :follower, class_name: 'User', foreign_key: 'follower_id'
   belongs_to :followed, class_name: 'User', foreign_key: 'followed_id'
 
-  # Validations
   validates :follower_id, uniqueness: { scope: :followed_id }
 end
