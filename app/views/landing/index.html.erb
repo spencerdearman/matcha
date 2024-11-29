@@ -77,11 +77,19 @@
     </div>
 
     <style>
+      /* Remove scrollbars */
+      html, body {
+        overflow: hidden; /* Disable all scrollbars */
+        margin: 0;
+        height: 100%; /* Ensure full height for proper layout */
+      }
+
       /* Feed Container */
       .feed-container {
         display: flex;
         justify-content: center;
         padding: 20px;
+        padding-bottom: 100px; /* Add extra padding to the bottom */
         max-width: 100%;
         margin: 0 auto;
         flex-direction: column;
@@ -126,6 +134,15 @@
         text-decoration: none;
       }
 
+      .profile-info a h3 {
+        color: #333333;
+        text-decoration: none; /* Remove underline for a cleaner look */
+      }
+
+      .profile-info a:hover h3 {
+        text-decoration: underline; /* Optional: Add an underline on hover for accessibility */
+      }
+
       .profile-pic {
         width: 50px;
         height: 50px;
@@ -136,6 +153,7 @@
       }
 
       .username {
+        color: #333333;
         font-weight: bold;
         font-size: 14px;
       }
@@ -146,6 +164,7 @@
         justify-content: center;
         align-items: center;
         max-height: unset; /* Allow the post to grow dynamically */
+        color: #333333;
       }
 
       .post-image {
@@ -197,7 +216,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        overflow: auto;
+        overflow: hidden; /* Disable scrolling in the modal */
         background-color: rgba(0, 0, 0, 0.8);
         justify-content: center;
         align-items: center;

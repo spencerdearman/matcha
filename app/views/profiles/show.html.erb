@@ -12,7 +12,8 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background-color: #f5f2e9;
+      color: #333333;
     }
 
     .profile-header {
@@ -295,7 +296,6 @@
     </div>
   </div>
 
-  <h2 class="your-posts-heading"><%= @user.username.capitalize %>'s Posts</h2>
   <% if @user.posts.any? %>
     <div class="profile-posts">
       <% @user.posts.each do |post| %>
