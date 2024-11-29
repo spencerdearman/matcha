@@ -25,13 +25,11 @@
         <h2><%= @user.username.capitalize %></h2>
 
         <!-- Follow/Unfollow Button -->
-        <% if current_user.followed_users.include?(@user) %>
-          <!-- If user is already following -->
+        <% if current_user.following?(@user) %>
           <%= form_with(url: destroy_follow_path(followed_id: @user.id), method: :delete, local: true) do %>
             <%= submit_tag 'Unfollow', class: 'btn-follow' %>
           <% end %>
         <% else %>
-          <!-- If user is not following -->
           <%= form_with(url: create_follow_path, method: :post, local: true) do %>
             <%= hidden_field_tag :followed_id, @user.id %>
             <%= submit_tag 'Follow', class: 'btn-follow' %>
@@ -197,5 +195,6 @@
       width: 100%;
     }
   </style>
+
 </body>
 </html>

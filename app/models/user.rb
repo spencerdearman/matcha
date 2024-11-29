@@ -32,6 +32,23 @@ class User < ApplicationRecord
   has_many :followers, through: :followed_relationships, source: :followed
   has_many :cafes, dependent: :destroy
 
-  # Replace image_url with ActiveStorage image attachment
-  has_one_attached :image  # ActiveStorage for profile picture
+  # ActiveStorage for profile picture
+  has_one_attached :image
+
+  # Methods to handle following and unfollowing users
+  def follow(user)
+    # Reversed logic: we want to associate the current user as "followed"
+    self.followed_users << user unless self == user
+  end
+
+  def unfollow(user)
+    # Reversed logic: we want to remove the association as followed
+    self.followed_users.delete(user)
+  end
+
+  # Helper method to check if the user is following someone (reversed logic here too)
+  def following?(user)
+    # Reverse check: if current user is NOT the follower, but is being followed
+    followed_users.include?(user)
+  end
 end
