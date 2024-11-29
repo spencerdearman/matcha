@@ -24,6 +24,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :posts do
+    resources :likes, only: [:create, :destroy]
+    resources :comments, only: [:create, :destroy]
+  end
+
   # Routes for the Follow resource
   post '/insert_follow', to: 'follows#create', as: :create_follow  # Create a new follow
   delete '/destroy_follow/:followed_id', to: 'follows#destroy', as: :destroy_follow  # Unfollow a user

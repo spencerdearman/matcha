@@ -12,18 +12,16 @@
     <div class="feed-container-inner">
       <% if @posts.any? %>
         <% @posts.each do |post| %>
-          <div class="post">
+          <div class="post" id="post-<%= post.id %>">
+            <!-- Post Header -->
             <div class="post-header">
               <div class="profile-info">
-                <!-- Conditional Link for Username -->
                 <% if post.user == current_user %>
-                  <!-- If it's the current user, link to their profile -->
                   <a href="<%= profile_path %>">
                     <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
                     <h3><%= post.user.username.capitalize %></h3>
                   </a>
                 <% else %>
-                  <!-- If it's another user, link to that user's profile -->
                   <a href="<%= user_path(post.user) %>">
                     <%= image_tag post.user.image.attached? ? post.user.image : "default-profile.png", alt: "Profile Picture", class: "profile-pic" %>
                     <h3><%= post.user.username.capitalize %></h3>
@@ -32,12 +30,35 @@
               </div>
             </div>
 
+            <!-- Post Body -->
             <div class="post-body">
               <% if post.image.attached? %>
                 <%= image_tag post.image, alt: "Post Image", class: "post-image" %>
               <% end %>
-              <p class="post-caption"><%= post.caption %></p>
             </div>
+
+            <!-- Like and Comment Actions -->
+            <div class="post-actions">
+              <% if post.liked_by?(current_user) %>
+                <%= button_to post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: 'icon-heart-filled no-border' do %>
+                  <%= image_tag 'filled-love.png', alt: 'Unlike', class: 'icon' %>
+                <% end %>
+              <% else %>
+                <%= button_to post_likes_path(post), method: :post, class: 'icon-heart-outline no-border' do %>
+                  <%= image_tag 'love.png', alt: 'Like', class: 'icon' %>
+                <% end %>
+              <% end %>
+              <span><%= post.likes.count %> <%= 'Like'.pluralize(post.likes.count) %></span>
+
+              <!-- Comment Icon -->
+              <a href="<%= post_path(post) %>" class="icon-comment">
+                <%= image_tag 'message.png', alt: 'Comments', class: 'icon' %>
+              </a>
+              <span><%= post.comments.count %> <%= 'Comment'.pluralize(post.comments.count) %></span>
+            </div>
+
+            <!-- Post Caption -->
+            <p class="post-caption"><strong><%= post.user.username.capitalize %>:</strong> <%= post.caption %></p>
           </div>
         <% end %>
       <% else %>
@@ -47,58 +68,37 @@
   </div>
 
   <style>
-    /* Overall Feed Container */
+    /* Feed Container */
     .feed-container {
       display: flex;
       justify-content: center;
       padding: 20px;
       max-width: 100%;
       margin: 0 auto;
-      height: auto;
       flex-direction: column;
     }
 
-    /* This inner container will hold all posts */
     .feed-container-inner {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 40px;
       justify-content: flex-start;
       width: 100%;
       margin-top: 20px;
     }
 
-    /* Individual Post Container */
+    /* Post */
     .post {
       width: 100%;
-      max-width: 350px;
+      max-width: 500px;
       border: 1px solid #ccc;
       border-radius: 10px;
       background-color: white;
       padding: 15px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
       margin: 0 auto;
-      height: auto;
     }
 
-    /* Post Body (image and caption) */
-    .post-body {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .post-image {
-      width: 100%;
-      height: 400px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    /* Post Header (username and profile image) */
     .post-header {
       display: flex;
       align-items: center;
@@ -114,7 +114,7 @@
     .profile-info a {
       display: flex;
       align-items: center;
-      text-decoration: none; /* Removes the underline from the link */
+      text-decoration: none;
     }
 
     .profile-pic {
@@ -125,49 +125,52 @@
       margin-right: 10px;
     }
 
-    .post-header h3 {
-      font-size: 16px;
-      font-weight: bold;
+    /* Adjusting Post Body and Image */
+    .post-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: unset; /* Allow the post to grow dynamically */
+    }
+
+    .post-image {
+      width: 100%;
+      height: auto; /* Maintain aspect ratio */
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    
+    /* Like and Comment Actions */
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Removing the box around buttons */
+    .no-border {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .no-border img {
+      display: inline-block;
     }
 
     .post-caption {
+      margin-top: 10px;
       font-size: 14px;
-      color: #333;
-    }
-
-    /* Button for navigation */
-    .btn-edit-profile {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
-    }
-
-    .btn-edit-profile:hover {
-      background-color: #45a049;
-    }
-
-    /* Footer Fix */
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #333;
-      color: white;
-      margin-top: 30px;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
-
-    /* Ensuring the whole body scrolls, not just a part of it */
-    body {
-      height: 100vh;
-      overflow-y: auto; /* Allow the entire page to scroll */
-      margin: 0;
+      text-align: left;
     }
   </style>
 </body>

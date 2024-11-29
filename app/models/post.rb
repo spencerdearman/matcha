@@ -26,4 +26,9 @@ class Post < ApplicationRecord
   # Validations
   validates :image, presence: true
   validates :caption, presence: true
+
+  # Check if a specific user has liked the post
+  def liked_by?(user)
+    likes.exists?(user: user)
+  end
 end

@@ -9,3 +9,12 @@ window.jQuery = jquery;
 window.$ = jquery;
 import Rails from "@rails/ujs"
 Rails.start();
+
+document.addEventListener("turbo:load", () => {
+  if (window.location.hash) {
+    const element = document.querySelector(window.location.hash);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+});

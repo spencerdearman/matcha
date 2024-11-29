@@ -1,15 +1,125 @@
-<h1>Post #<%= @the_post.id %> Details</h1>
+<h1>Post Details</h1>
 
-<p><%= @post.caption %></p> <!-- Use caption, not content -->
+<div class="post-details">
+  <!-- Post Image -->
+  <% if @the_post.image.attached? %>
+    <%= image_tag(@the_post.image.url, alt: 'Post Image', class: 'post-image') %>
+  <% end %>
 
-<div>
-  <div>
-    <%= image_tag(@the_post.image.url) if @the_post.image.attached? %>
+  <!-- Post Caption -->
+  <p class="post-caption"><%= @the_post.caption %></p>
+
+  <!-- Post Actions -->
+  <div class="post-actions">
+    <%= link_to 'Edit Post', edit_post_path(@the_post), class: 'btn-edit' %>
+    <%= link_to 'Delete Post', post_path(@the_post), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn-delete' %>
+    <%= link_to 'Back to Posts', posts_path, class: 'btn-back' %>
   </div>
 
-  <p><%= @the_post.caption %></p>
+  <!-- Likes Section -->
+  <div class="post-likes">
+    <% if @the_post.liked_by?(current_user) %>
+      <%= button_to 'Unlike', post_like_path(@the_post, @the_post.likes.find_by(user: current_user)), method: :delete, class: 'btn-unlike' %>
+    <% else %>
+      <%= button_to 'Like', post_likes_path(@the_post), method: :post, class: 'btn-like' %>
+    <% end %>
+    <span><%= @the_post.likes.count %> <%= 'Like'.pluralize(@the_post.likes.count) %></span>
+  </div>
 
-  <%= link_to 'Back to Posts', posts_path %> |
-  <%= link_to 'Edit Post', edit_post_path(@the_post) %> |
-  <%= link_to 'Delete Post', post_path(@the_post), method: :delete, data: { confirm: "Are you sure?" } %>
+  <!-- Comments Section -->
+  <div class="post-comments">
+    <h3>Comments (<%= @the_post.comments.count %>)</h3>
+    <ul class="comments-list">
+      <% @the_post.comments.each do |comment| %>
+        <li>
+          <strong><%= comment.user.username %>:</strong> <%= comment.content %>
+          <% if comment.user == current_user %>
+            <%= link_to 'Delete', post_comment_path(@the_post, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn-delete-comment' %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Add Comment Form -->
+    <h4>Add a Comment</h4>
+    <%= form_with(model: [@the_post, Comment.new], local: true) do |form| %>
+      <%= form.text_field :content, placeholder: 'Write your comment here...', class: 'comment-field' %>
+      <%= form.submit 'Comment', class: 'btn-comment' %>
+    <% end %>
+  </div>
 </div>
+
+<style>
+  .post-details {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-image {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .post-caption {
+    font-size: 1.5em;
+    margin: 10px 0;
+    color: #333;
+  }
+
+  .post-actions {
+    margin: 20px 0;
+  }
+
+  .btn-edit, .btn-delete, .btn-back, .btn-like, .btn-unlike, .btn-comment {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    color: white;
+    background-color: #4CAF50;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-delete {
+    background-color: red;
+  }
+
+  .btn-edit:hover, .btn-delete:hover, .btn-back:hover, .btn-like:hover, .btn-unlike:hover, .btn-comment:hover {
+    background-color: #45a049;
+  }
+
+  .btn-delete:hover {
+    background-color: darkred;
+  }
+
+  .post-likes {
+    margin: 20px 0;
+    font-size: 1.2em;
+  }
+
+  .post-comments {
+    margin-top: 40px;
+  }
+
+  .comments-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .comments-list li {
+    margin-bottom: 10px;
+  }
+
+  .comment-field {
+    width: calc(100% - 100px);
+    padding: 10px;
+    margin-right: 10px;
+  }
+</style>

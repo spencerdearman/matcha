@@ -1,0 +1,12 @@
+<turbo-stream action="replace" target="post-<%= @post.id %>">
+  <template>
+    <div class="post-actions">
+      <% if @post.liked_by?(current_user) %>
+        <%= button_to '', post_like_path(@post, @post.likes.find_by(user: current_user)), method: :delete, class: 'icon-heart-filled' %>
+      <% else %>
+        <%= button_to '', post_likes_path(@post), method: :post, class: 'icon-heart-outline' %>
+      <% end %>
+      <span><%= @post.likes.count %> <%= 'Like'.pluralize(@post.likes.count) %></span>
+    </div>
+  </template>
+</turbo-stream>
