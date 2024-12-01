@@ -1,187 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Matcha</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  <style>
-    /* Body and overall layout */
-    body {
-      display: flex;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f2e9;
-      height: 100vh;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Matcha</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <style>
+      /* Reset for consistent margins and padding */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 200px;
-      height: 100%;
-      background-color: #4b4b4b;
-      padding-top: 30px;
-      color: #f5f2e9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+      /* Body styling */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f2e9;
+        display: flex;
+      }
 
-    /* Sidebar links */
-    .sidebar a {
-      color: #f5f2e9;
-      text-decoration: none;
-      margin: 10px 0;
-      font-size: 18px;
-    }
+      /* Sidebar container */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100%;
+        background-color: #4b4b4b;
+        padding: 20px 15px;
+        color: #f5f2e9;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
 
-    /* Sidebar title */
-    .sidebar h1 {
-      font-size: 35px;  /* Increase font size for "MATCHA" */
-      font-weight: bold;
-      margin-bottom: 30px;  /* Add space below the title */
-    }
+      /* MATCHA title */
+      .sidebar h1 {
+        font-size: 38px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #f5f2e9;
+      }
 
-    /* Ensure the link does not override font size */
-    .sidebar h1 a {
-      color: #4b4b4b;
-      text-decoration: none;
-      font-size: 35px;
-    }
+      .sidebar h1 a {
+        color: #f5f2e9;
+        text-decoration: none;
+        font-size: inherit;
+      }
 
-    /* Logout button */
-    .logout-button {
-      position: absolute;
-      bottom: 50px; /* Place slightly above the bottom */
-      left: 10px;   /* Align with the sidebar padding */
-      background-color: #558255;
-      color: white;
-      font-size: 16px;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: calc(100% - 40%); /* Fit within the sidebar width */
-      text-align: center;
-    }
+      /* Navigation links/buttons */
+      .sidebar a,
+      .sidebar button {
+        width: 100%;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        background: none;
+        border: none;
+        color: #f5f2e9;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: background-color 0.2s;
+      }
 
-    .logout-button:hover {
-      background-color: #476e47;
-    }
+      .sidebar a:hover,
+      .sidebar button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
 
-    /* Header for content section */
-    header {
-      background-color: #333;
-      padding: 10px;
-      color: #f5f2e9;
-      position: fixed;
-      width: calc(100% - 200px);
-      left: 200px;
-      top: 0;
-      z-index: 10;
-    }
+      /* Icons in navigation */
+      .sidebar .icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
 
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
+      /* Logout button */
+      .logout-button {
+        margin-top: auto;
+        background-color: #558255 !important;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-align: center;
+        transition: background-color 0.2s;
+      }
 
-    /* Content section */
-    .content {
-      margin-left: 200px;
-      padding: 20px;
-      padding-top: 80px; /* Add some padding to avoid overlap with the header */
-      width: calc(100% - 200px);
-      overflow-y: scroll;
-      height: 100%;
-    }
+      .logout-button:hover {
+        background-color: #476e47 !important;
+      }
 
-    /* Feed container */
-    .feed-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+      /* Main content container */
+      .content {
+        margin-left: 250px; /* Leave space for the sidebar */
+        padding: 20px;
+        width: calc(100% - 250px); /* Adjust width to fill remaining space */
+        overflow-y: auto; /* Enable scrolling for the main content */
+        height: 100vh; /* Ensure the content area fills the viewport height */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h1><a href="<%= root_path %>">MATCHA</a></h1>
+      <% if user_signed_in? %>
+        <a href="<%= root_path %>">
+          <img src="/assets/home.png" alt="Home Icon" class="icon"> Home
+        </a>
+        <a href="<%= search_path %>">
+          <img src="/assets/search.png" alt="Search Icon" class="icon"> Search
+        </a>
+        <a href="<%= explore_path %>">
+          <img src="/assets/explore.png" alt="Explore Icon" class="icon"> Explore
+        </a>
+        <a href="<%= map_path %>">
+          <img src="/assets/map.png" alt="Map Icon" class="icon"> Map
+        </a>
+        <a href="<%= profile_path %>">
+          <img src="/assets/profile.png" alt="Profile Icon" class="icon"> Profile
+        </a>
+      <% else %>
+        <a href="<%= root_path %>">
+          <img src="/assets/home.png" alt="Home Icon" class="icon"> Home
+        </a>
+        <a href="<%= new_user_session_path %>">
+          <img src="/assets/login.png" alt="Login Icon" class="icon"> Login
+        </a>
+        <a href="<%= new_user_registration_path %>">
+          <img src="/assets/sign-up.png" alt="Sign Up Icon" class="icon"> Sign Up
+        </a>
+      <% end %>
 
-    /* Individual Post Container */
-    .post {
-      width: 100%;
-      max-width: 350px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f5f2e9;
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 0 auto;
-      height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
+      <% if user_signed_in? %>
+        <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "logout-button" %>
+      <% end %>
+    </div>
 
-    .post-body {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .post-image {
-      width: 100%;
-      height: 400px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .profile-info {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .profile-pic {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 10px;
-    }
-
-    .post-header h3 {
-      font-size: 16px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h1><a href="<%= root_path %>" style="color: white; text-decoration: none;">MATCHA</a></h1>
-    <% if user_signed_in? %>
-      <a href="<%= root_path %>">Feed</a>
-      <a href="<%= profile_path %>">Profile</a>
-    <% else %>
-      <a href="<%= root_path %>">Home</a>
-      <a href="<%= new_user_session_path %>">Login</a>
-      <a href="<%= new_user_registration_path %>">Sign Up</a>
-    <% end %>
-
-    <% if user_signed_in? %>
-  <!--    <a href="<%#= destroy_user_session_path %>" method="delete">Log out</a>-->
-      <%#= button_to "Sign out", destroy_user_session_path, method: :delete, class: "logout-button" %>
-      <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "logout-button" %>
-    <% end %>
-  </div>
-
-  <!-- Main Content -->
-  <div class="content">
-    <%= yield %> <!-- Main content like the feed will be rendered here -->
-  </div>
-
-</body>
+    <!-- Main Content -->
+    <div class="content">
+      <%= yield %> <!-- Main content like the feed will be rendered here -->
+    </div>
+  </body>
 </html>
